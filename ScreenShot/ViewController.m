@@ -27,6 +27,7 @@
     if (!_imgView) {
         _imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 20, SCREEN_Width, SCREEN_Height / 3.0)];
         _imgView.backgroundColor = [UIColor orangeColor];
+        _imgView.contentMode = UIViewContentModeScaleAspectFit;
     }
     return _imgView;
 }
@@ -43,25 +44,22 @@
 //点击按钮 进行屏幕截图
 - (IBAction)didClickBtnAction:(UIButton *)sender {
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        //开启一个和图片相关的图形上下文
-        UIGraphicsBeginImageContextWithOptions(self.shotView.bounds.size, NO, 0.0);
-        
-        //获取刚刚开启的上下文
-        CGContextRef ref = UIGraphicsGetCurrentContext();
-        
-        //进行截图 把当前控制器view的显示效果绘制到图形上下文中 / 截取shotView
-        [self.shotView.layer renderInContext:ref];
-        
-        //从上下文中获取图片
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        
-        //关闭图形上下文
-        UIGraphicsEndImageContext();
-        
-        self.imgView.image = image;
-    });
+    //开启一个和图片相关的图形上下文
+    UIGraphicsBeginImageContextWithOptions(self.shotView.bounds.size, NO, 0.0);
     
+    //获取刚刚开启的上下文
+    CGContextRef ref = UIGraphicsGetCurrentContext();
+    
+    //进行截图 把当前控制器view的显示效果绘制到图形上下文中 / 截取shotView
+    [self.shotView.layer renderInContext:ref];
+    
+    //从上下文中获取图片
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    //关闭图形上下文
+    UIGraphicsEndImageContext();
+    
+    self.imgView.image = image;
 }
 
 - (void)viewDidLoad {
